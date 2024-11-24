@@ -29,6 +29,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
+	printf("시작");
 	if (init_shell(&shell, envp) == -1)
 		return (EXIT_FAILURE);
 	shell.user_input = readline(update_prompt(&shell));
@@ -36,7 +37,8 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		if (*shell.user_input && !ft_isspace(*shell.user_input))
 			add_history(shell.user_input);
-		test_builtin(&shell);
+		//test_builtin(&shell);
+		pipe_execute(&shell, envp);
 		free(shell.user_input);
 		shell.user_input = readline(update_prompt(&shell));
 	}
@@ -105,7 +107,7 @@ int	test_builtin(t_shell_info *shell)
 
 	if (!shell)
 		return (-1);
-	printf("shell->user_input : %s\n", shell->user_input);
+	printf("\nshell->user_input : %s\n", shell->user_input);
 	line_segments = ft_split(shell->user_input, ' ');
 	if (!line_segments)
 		return (-1);
@@ -132,6 +134,9 @@ int	test_builtin(t_shell_info *shell)
 	free_strs(line_segments);
 	return (0);
 }
+
+
+
 
 // void	test(t_shell_info shell)
 // {
