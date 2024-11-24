@@ -15,6 +15,11 @@
 
 # include <stddef.h>
 # include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/wait.h>
+#include <string.h>
 
 # ifndef GNL_BUFFER_SIZE
 #  define GNL_BUFFER_SIZE 4096
@@ -158,5 +163,11 @@ char		**filter_out_str(char **strs, const char *out_str);
 char		*get_first_line(int fd, int del_newline_flag);
 char		*ft_itoa(int n);
 char		get_last_char(char *s);
+
+//pipe_utils.c
+char	*ft_strnstr(const char *big, const char *little, size_t len);
+
+//pipex.c
+void pipe_execute(t_shell_info *shell, char **envp);
 
 #endif
