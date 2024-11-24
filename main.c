@@ -105,6 +105,7 @@ int	test_builtin(t_shell_info *shell)
 
 	if (!shell)
 		return (-1);
+	printf("shell->user_input : %s\n", shell->user_input);
 	line_segments = ft_split(shell->user_input, ' ');
 	if (!line_segments)
 		return (-1);

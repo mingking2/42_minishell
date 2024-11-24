@@ -108,6 +108,6 @@ int	clear_shell(t_shell_info *shell, int return_value)
 	free(shell->prompt);
 	free(shell->user_input);
 	// del_quote_list(&shell->quote_list);
-	rl_clear_history();
+	clear_history();
 	return (return_value);
 }
