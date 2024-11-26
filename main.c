@@ -26,6 +26,8 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	t_shell_info	shell;
 	int				is_prompt_update_err;
+	char			**tokens;
+	int				i;
 
 	(void)argc;
 	(void)argv;
@@ -35,10 +37,10 @@ int	main(int argc, char *argv[], char *envp[])
 	shell.user_input = readline(update_prompt(&shell));
 	while (shell.user_input && shell.prompt)
 	{
-		if (*shell.user_input && !ft_isspace(*shell.user_input))
+		if (*shell.user_input)
 			add_history(shell.user_input);
-		//test_builtin(&shell);
-		pipe_execute(&shell, envp);
+		
+		test_builtin(&shell);
 		free(shell.user_input);
 		shell.user_input = readline(update_prompt(&shell));
 	}
