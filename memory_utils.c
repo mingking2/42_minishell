@@ -16,6 +16,7 @@
 void	*ft_memset(void *s, int c, size_t n);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	*free_and_return_null(void *ptr);
+char	**free_strs(char **strs);
 
 void	*ft_memset(void *s, int c, size_t n)
 {
@@ -62,5 +63,18 @@ void	*ft_calloc(size_t nmemb, size_t size)
 void	*free_and_return_null(void *ptr)
 {
 	free(ptr);
+	return (NULL);
+}
+
+char	**free_strs(char **strs)
+{
+	char	**temp_strs;
+
+	if (!strs)
+		return (NULL);
+	temp_strs = strs;
+	while (*temp_strs)
+		free(*temp_strs++);
+	free(strs);
 	return (NULL);
 }
