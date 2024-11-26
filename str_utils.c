@@ -27,14 +27,15 @@ char		*strjoin_inplace(char **s1, const char *s2);
 char		*strprepend_inplace(const char *s1, char **s2);
 char		*strs_join(char **strs, const char *delimiter);
 char		**dup_strs(char **strs);
-char		**free_strs(char **strs);
 long long	strict_atoll(char *nptr, int *is_err);
 size_t		ft_strlcpy(char *dst, const char *src, size_t size);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 char		**filter_out_str(char **strs, const char *out_str);
 char		*get_first_line(int fd, int del_newline_flag);
 char		*ft_itoa(int n);
-char		get_last_char(char *s);
+char		get_last_char(const char *s);
+char		*search_first_non_whitespace(const char *s);
+int			get_strs_num(char **strs);
 
 int	selection_sort_strs(char **strs)
 {
@@ -232,10 +233,7 @@ char	*strs_join(char **strs, const char *delimiter)
 			(delimiter && \
 				strs[i + 1] && \
 				!strjoin_inplace(&result, delimiter)))
-		{
-			free(result);
-			return (NULL);
-		}
+			return (free_and_return_null(result));
 	}
 	return (result);
 }
@@ -266,19 +264,6 @@ char	**dup_strs(char **strs)
 	}
 	result[i] = NULL;
 	return (result);
-}
-
-char	**free_strs(char **strs)
-{
-	char	**temp_strs;
-
-	if (!strs)
-		return (NULL);
-	temp_strs = strs;
-	while (*temp_strs)
-		free(*temp_strs++);
-	free(strs);
-	return (NULL);
 }
 
 long long	strict_atoll(char *nptr, int *is_err)
@@ -426,9 +411,35 @@ char	*ft_itoa(int n)
 	return (result);
 }
 
-char	get_last_char(char *s)
+char	get_last_char(const char *s)
 {
 	if (!s || !*s)
 		return (-1);
 	return (s[ft_strlen(s) - 1]);
+}
+
+char	*search_first_non_whitespace(const char *s)
+{
+	if (!s)
+		return (NULL);
+	while (ft_isspace(*s))
+		++s;
+	if (!*s)
+		return (NULL);
+	return ((char *)s);
+}
+
+int	get_strs_num(char **strs)
+{
+	int	num;
+
+	if (!strs)
+		return (0);
+	num = 0;
+	while (*strs)
+	{
+		++num;
+		++strs;
+	}
+	return (num);
 }

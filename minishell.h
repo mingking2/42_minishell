@@ -27,10 +27,22 @@
 # define META_WHITE_SPACE " \t\n"
 # define META_CONTROL "|&;()<>"
 
-typedef struct s_file_node	t_file_node;
-typedef struct s_shell_info	t_shell_info;
-typedef struct s_env_list	t_env_list;
-typedef struct s_quote_node	t_quote_node;
+typedef enum e_redir_type       t_redir_type;
+
+typedef struct s_file_node		t_file_node;
+typedef struct s_shell_info		t_shell_info;
+typedef struct s_env_list		t_env_list;
+typedef struct s_quote_node		t_quote_node;
+typedef struct s_pipeline_cmd   t_pipeline_cmd;
+typedef struct s_redir_list     t_redir_list;
+
+enum e_redir_type
+{
+    IN = 0,
+    OUT,
+	APPEND,
+    HEREDOC
+};
 
 struct s_file_node
 {
@@ -68,8 +80,23 @@ struct s_quote_node
 	char				*raw_str;
 	char				quote;
 	char				**tokens;
-	char				*token_prefix;
+	int					link_to_next;
 	struct s_quote_node	*next;
+};
+
+struct s_pipeline_cmd
+{
+    char                    **tokens;
+    t_redir_list            *redir_list;
+    struct s_pipeline_cmd   *next;
+};
+
+struct s_redir_list
+{
+    t_redir_type		type;
+    char				*arg;
+	char				*limiter;
+    struct s_redir_list	*next;
 };
 
 // builtin.c
@@ -120,9 +147,10 @@ char		*get_next_line(int fd, int *is_err, int del_node_flag);
 void		*ft_memset(void *s, int c, size_t n);
 void		*ft_calloc(size_t nmemb, size_t size);
 void		*free_and_return_null(void *ptr);
+char		**free_strs(char **strs);
 
 // parse_quotes.c
-t_quote_node	*parse_quotes(t_shell_info *shell);
+char			**tokenize_input(t_shell_info *shell);
 t_quote_node	*del_quote_list(t_quote_node **quote_list);
 
 // shell_management.c
@@ -150,13 +178,14 @@ char		*strjoin_inplace(char **s1, const char *s2);
 char		*strprepend_inplace(const char *s1, char **s2);
 char		*strs_join(char **strs, const char *delimiter);
 char		**dup_strs(char **strs);
-char		**free_strs(char **strs);
 long long	strict_atoll(char *nptr, int *is_err);
 size_t		ft_strlcpy(char *dst, const char *src, size_t size);
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 char		**filter_out_str(char **strs, const char *out_str);
 char		*get_first_line(int fd, int del_newline_flag);
 char		*ft_itoa(int n);
-char		get_last_char(char *s);
+char		get_last_char(const char *s);
+char		*search_first_non_whitespace(const char *s);
+int			get_strs_num(char **strs);
 
 #endif
