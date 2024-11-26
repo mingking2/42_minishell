@@ -31,6 +31,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	(void)argc;
 	(void)argv;
+	printf("시작");
 	if (init_shell(&shell, envp) == -1)
 		return (EXIT_FAILURE);
 	shell.user_input = readline(update_prompt(&shell));
@@ -38,18 +39,8 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		if (*shell.user_input)
 			add_history(shell.user_input);
-
-		tokens = tokenize_input(&shell);
-		if (!tokens)
-			return (clear_shell(&shell, EXIT_FAILURE));
-		printf("success tokens \n");
-		i = -1;
-		while (tokens[++i])
-			printf("tokens[%d] : %s \n", i, tokens[i]);
-		printf("\n\n");
-		free_strs(tokens);
-
-		test_builtin(NULL);
+		
+		test_builtin(&shell);
 		free(shell.user_input);
 		shell.user_input = readline(update_prompt(&shell));
 	}
@@ -118,6 +109,7 @@ int	test_builtin(t_shell_info *shell)
 
 	if (!shell)
 		return (-1);
+	printf("\nshell->user_input : %s\n", shell->user_input);
 	line_segments = ft_split(shell->user_input, ' ');
 	if (!line_segments)
 		return (-1);
@@ -144,6 +136,9 @@ int	test_builtin(t_shell_info *shell)
 	free_strs(line_segments);
 	return (0);
 }
+
+
+
 
 // void	test(t_shell_info shell)
 // {
